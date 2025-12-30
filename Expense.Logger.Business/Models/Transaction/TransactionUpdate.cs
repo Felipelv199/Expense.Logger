@@ -1,4 +1,4 @@
-﻿namespace Expense.Logger.Business.Models.Transactions;
+﻿namespace Expense.Logger.Business.Models.Transaction;
 
 public class TransactionUpdate
 {

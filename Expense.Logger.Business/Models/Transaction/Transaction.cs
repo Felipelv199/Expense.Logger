@@ -1,4 +1,4 @@
-﻿namespace Expense.Logger.Business.Models.Transactions;
+﻿namespace Expense.Logger.Business.Models.Transaction;
 
 public class Transaction
 {
@@ -13,13 +13,6 @@ public class Transaction
     public TransactionCategory Category { get; set; }
 
     public TransactionType Type { get; set; }
-}
-
-public class TransactionType
-{
-    public long Id { get; set; }
-
-    public string Name { get; set; }
 }
 
 public class TransactionCategory

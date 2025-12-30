@@ -1,3 +1,4 @@
+using Expense.Logger.Api.Filters;
 using Expense.Logger.Business.Implementations;
 using Expense.Logger.Business.Interfaces;
 using Expense.Logger.Data;
@@ -7,7 +8,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<HttpResponseExceptionFilter>();
+});
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 builder.Services.AddSingleton<ITransactionsHandler, TransactionHandler>();

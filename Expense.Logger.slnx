@@ -4,11 +4,11 @@
     <File Path=".gitignore" />
     <File Path="DatabaseMigrations.md" />
   </Folder>
+  <Project Path="Expense.Logger.Api/Expense.Logger.Api.csproj" />
   <Project Path="Expense.Logger.Business/Expense.Logger.Business.csproj" Id="37fc273d-c707-479f-9438-9761b6a195db" />
   <Project Path="expense.logger.client/expense.logger.client.esproj">
     <Build />
     <Deploy />
   </Project>
   <Project Path="Expense.Logger.Data/Expense.Logger.Data.csproj" Id="39eea7a3-8191-4fa1-8a9b-5204cd9ccf8f" />
-  <Project Path="Expense.Logger.Api/Expense.Logger.Api.csproj" />
 </Solution>

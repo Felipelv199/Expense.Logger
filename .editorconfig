@@ -1,4 +1,8 @@
 [*.cs]
 # Prefer file-scoped namespaces (C# 10+)
 csharp_style_namespace_declarations = file_scoped:error
-dotnet_diagnostic.IDE0161.severity = error
+# IDE0005: Remove unnecessary imports (using directives)
+dotnet_diagnostic.IDE0005.severity = error
+
+# IDE0130: Namespace does not match folder structure
+dotnet_diagnostic.IDE0130.severity = error
