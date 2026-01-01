@@ -7,20 +7,13 @@ namespace Expense.Logger.Api.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class TransactionsController : ControllerBase
+public class TransactionsController(ITransactionsHandler transactionsHandler) : ControllerBase()
 {
-    public ITransactionsHandler _transactionsHandler;
-
-    public TransactionsController(ITransactionsHandler transactionsHandler) : base()
-    {
-        _transactionsHandler = transactionsHandler;
-    }
+    public ITransactionsHandler _transactionsHandler = transactionsHandler;
 
     [HttpPost]
-    public ActionResult Create([FromBody][Required] TransactionCreate create)
-    {
-        return Ok(_transactionsHandler.CreateAsync(create));
-    }
+    public async Task<ActionResult> Create([FromBody][Required] TransactionCreate create) =>
+        Ok(await _transactionsHandler.CreateAsync(create));
 
     [HttpGet("{id}")]
     public ActionResult GetById(long id)

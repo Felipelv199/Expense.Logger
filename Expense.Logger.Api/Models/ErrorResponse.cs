@@ -9,12 +9,12 @@ public class ErrorResponse
 
     public string Message { get; set; }
 
-    public IEnumerable<ErrorDetail> Details { get; set; } = [];
+    public IEnumerable<ErrorDetails> Errors { get; set; } = [];
 
     public string RequestId { get; set; } // unique-request-id-for-logging
 }
 
-public class ErrorDetail // field-specific error
+public class ErrorDetails // field-specific error
 {
     public string Field { get; set; }
 
