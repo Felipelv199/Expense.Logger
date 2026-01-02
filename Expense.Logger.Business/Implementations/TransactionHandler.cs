@@ -1,17 +1,26 @@
 ﻿using Expense.Logger.Business.Interfaces;
+using Expense.Logger.Business.Mappers;
 using Expense.Logger.Business.Models;
 using Expense.Logger.Business.Models.Transaction;
 using Expense.Logger.Business.Validators;
+using Expense.Logger.Data.Interfaces;
 
 namespace Expense.Logger.Business.Implementations;
 
-public class TransactionHandler : ITransactionsHandler
+public partial class TransactionHandler(ICatgoriesRepository catgoriesRepository, ITransactionsRepository transactionsRepository) : ITransactionsHandler
 {
-    public Task CreateAsync(TransactionCreate transactionCreate)
+    public ICatgoriesRepository _catgoriesRepository = catgoriesRepository;
+
+    public ITransactionsRepository _transactionsRepository = transactionsRepository;
+
+    public async Task<Transaction> CreateAsync(TransactionCreate transactionCreate)
     {
         TransactionValidators.ValidateTransactionCreate(transactionCreate);
 
-        throw new NotImplementedException();
+        await EnsureTransactionCategoryExists(transactionCreate.CategoryId);
+        var transactionData = await _transactionsRepository.AddAndSave(transactionCreate.ToDataModel());
+
+        return transactionData.ToBusinessModel();
     }
 
     public Task DeleteAsync(long id)

@@ -3,7 +3,7 @@
 namespace Expense.Logger.Data.Models;
 
 [PrimaryKey(nameof(TransactionId))]
-public class Transactions
+public class Transactions : BaseDataModel
 {
     public long TransactionId { get; set; }
 
@@ -16,10 +16,6 @@ public class Transactions
     public long? BankAccountId { get; set; } = null;
 
     public string Description { get; set; }
-
-    public DateTime CreatedAt { get; set; }
-
-    public DateTime UpdatedAt { get; set; }
 
     public long? CategoryId { get; set; } = null;
 

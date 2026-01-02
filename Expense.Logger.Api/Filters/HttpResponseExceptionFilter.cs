@@ -1,8 +1,10 @@
-﻿using Expense.Logger.Api.Models;
+﻿using Expense.Logger.Api.Mappers;
+using Expense.Logger.Api.Models;
 using Expense.Logger.Business.Models.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Net;
+using InvalidDataException = Expense.Logger.Business.Models.Exceptions.InvalidDataException;
 
 namespace Expense.Logger.Api.Filters;
 
@@ -32,13 +34,14 @@ public class HttpResponseExceptionFilter : IActionFilter, IOrderedFilter
             Status = (int)httpStatus,
             Code = httpStatus.ToString(),
             Message = GetErrorMessage(exception),
-            RequestId = Guid.NewGuid().ToString()
+            RequestId = Guid.NewGuid().ToString(),
+            Errors = httpStatus == HttpStatusCode.BadRequest ? GetErrorDetails(exception) : []
         };
     }
 
     private static HttpStatusCode GetHttpStatus(Exception exception) => exception switch
     {
-        TransactionCategoryNotFound transactionCategoryNotFound => HttpStatusCode.BadRequest,
+        TransactionCategoryNotFound or TransactionCategoryNotFound or InvalidTransactionCreateException or InvalidTransactionQueryException => HttpStatusCode.BadRequest,
 
         _ => HttpStatusCode.InternalServerError,
     };
@@ -47,6 +50,11 @@ public class HttpResponseExceptionFilter : IActionFilter, IOrderedFilter
     {
         TransactionCategoryNotFound transactionCategoryNotFound => transactionCategoryNotFound.Message,
 
+        InvalidDataException invalidDataException => invalidDataException.Message,
+
         _ => "The server was unable to complete your request. Please try again later."
     };
+
+    private static IEnumerable<ErrorDetails> GetErrorDetails(Exception exception) => exception is
+        InvalidDataException invalidDataException ? [invalidDataException.Details.ToErrorDetails()] : [];
 }

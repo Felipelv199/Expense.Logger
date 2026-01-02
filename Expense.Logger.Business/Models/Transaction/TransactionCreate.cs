@@ -8,15 +8,15 @@ public class TransactionCreate
     [Required]
     public decimal Amount { get; set; }
 
+    public long? CategoryId { get; set; }
+
     [Required]
-    public string Name { get; set; }
+    public DateTime? Date { get; set; }
 
     public string Description { get; set; }
 
     [Required]
-    public DateTime? Date {  get; set; }
-
-    public long CategoryId { get; set; }
+    public string Name { get; set; }
 
     [Required]
     [JsonConverter(typeof(JsonStringEnumConverter))]

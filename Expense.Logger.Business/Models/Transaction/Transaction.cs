@@ -10,14 +10,7 @@ public class Transaction
 
     public DateTime Date { get; set; }
 
-    public TransactionCategory Category { get; set; }
+    public Category Category { get; set; }
 
     public TransactionType Type { get; set; }
-}
-
-public class TransactionCategory
-{
-    public long Id { get; set; }
-
-    public string Name { get; set; }
 }

@@ -7,4 +7,8 @@
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Expense.Logger.Data\Expense.Logger.Data.csproj" />
+  </ItemGroup>
+
 </Project>

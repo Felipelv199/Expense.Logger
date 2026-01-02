@@ -1,4 +1,5 @@
-﻿using Expense.Logger.Business.Models.Transaction;
+﻿using Expense.Logger.Business.Models.Exceptions;
+using Expense.Logger.Business.Models.Transaction;
 
 namespace Expense.Logger.Business.Validators;
 
@@ -8,7 +9,7 @@ public static class TransactionValidators
     {
         if (transaction.Date > DateTime.Now)
         {
-            throw new Exception("Transaction date cannot be in the future");
+            throw new InvalidTransactionCreateException(nameof(transaction.Date), "Transaction date cannot be in the future");
         }
     }
 
@@ -18,7 +19,7 @@ public static class TransactionValidators
         {
             if (query.PageNumber < 1)
             {
-                throw new Exception("Page number needs to be 1 or greater");
+                throw new InvalidTransactionQueryException(nameof(query.PageNumber), "Page number needs to be 1 or greater");
             }
         }
 
@@ -26,7 +27,7 @@ public static class TransactionValidators
         {
             if (query.PageSize < 1)
             {
-                throw new Exception("Page size needs to be 1 or greater");
+                throw new InvalidTransactionQueryException(nameof(query.PageSize), "Page size needs to be 1 or greater");
             }
         }
 
@@ -34,7 +35,7 @@ public static class TransactionValidators
         {
             if (query.From > query.To)
             {
-                throw new Exception("To needs to be greater than From");
+                throw new InvalidTransactionQueryException(nameof(query.To), "To needs to be greater than From");
             }
         }
 
@@ -42,7 +43,7 @@ public static class TransactionValidators
         {
             if (query.From > DateTime.Now)
             {
-                throw new Exception("From needs to be less or equal to our current date and time");
+                throw new InvalidTransactionQueryException(nameof(query.From), "From needs to be less or equal to our current date and time");
             }
         }
 
@@ -50,7 +51,7 @@ public static class TransactionValidators
         {
             if (query.To > DateTime.Now)
             {
-                throw new Exception("To needs to be less or equal to our current date and time");
+                throw new InvalidTransactionQueryException(nameof(query.To), "To needs to be less or equal to our current date and time");
             }
         }
     }
