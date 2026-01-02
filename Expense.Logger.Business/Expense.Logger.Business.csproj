@@ -4,6 +4,11 @@
     <TargetFramework>net10.0</TargetFramework>
     <RootNamespace>Expense.Logger.Business</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Expense.Logger.Data\Expense.Logger.Data.csproj" />
+  </ItemGroup>
 
 </Project>

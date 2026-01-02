@@ -1,17 +1,11 @@
 ﻿using Expense.Logger.Data.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection.Metadata;
 
 namespace Expense.Logger.Data;
 
-public class ExpenseLoggerDbContext : DbContext
+public class ExpenseLoggerDbContext(DbContextOptions<ExpenseLoggerDbContext> options) : DbContext(options)
 {
-    public ExpenseLoggerDbContext(DbContextOptions<ExpenseLoggerDbContext> options)
-        : base(options)
-    {
-    }
-
-    public DbSet<BankAccounts> BankAccounts { get; set; }
+     public DbSet<BankAccounts> BankAccounts { get; set; }
 
     public DbSet<Categories> Categories { get; set; }
 

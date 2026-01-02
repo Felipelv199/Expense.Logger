@@ -1,6 +1,6 @@
 ﻿namespace Expense.Logger.Business.Models;
 
-public class RequestQueryPageInfo
+public class PageInfoQuery
 {
     public int? PageNumber { get; set; }
 
