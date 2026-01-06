@@ -23,7 +23,29 @@ public static class TransactionMappers
             Name = transactionData.Name,
             Amount = transactionData.Amount,
             Date = transactionData.Date,
-            Category = transactionData.Category.ToBusinessModel(),
+            Category = transactionData.Category?.ToBusinessModel(),
             Type = (TransactionType)transactionData.Type
         };
+
+    public static TransactionPageInfo ToTransactionPageInfo(this TransactionQuery transactionQuery) {
+        if (string.IsNullOrEmpty(transactionQuery.NextPageKey))
+            return new()
+            {
+                Take = transactionQuery.PageSize,
+                LastDate = DateTime.Now,
+                LastTransactionId = null,
+                From = transactionQuery.From,
+                To = transactionQuery.To,
+            };
+        
+
+        var pageData = transactionQuery.NextPageKey.ToTransactionPageKeyData();
+
+        return new()
+        {
+            Take = transactionQuery.PageSize,
+            LastDate = pageData.NextDate,
+            LastTransactionId = pageData.NextTransactionId,
+        };
+    }
 }

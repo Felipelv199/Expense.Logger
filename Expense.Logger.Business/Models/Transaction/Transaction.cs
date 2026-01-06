@@ -1,4 +1,6 @@
-﻿namespace Expense.Logger.Business.Models.Transaction;
+﻿using System.Text.Json.Serialization;
+
+namespace Expense.Logger.Business.Models.Transaction;
 
 public class Transaction
 {
@@ -10,7 +12,9 @@ public class Transaction
 
     public DateTime Date { get; set; }
 
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public Category Category { get; set; }
 
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public TransactionType Type { get; set; }
 }

@@ -3,6 +3,7 @@
 namespace Expense.Logger.Data.Models;
 
 [PrimaryKey(nameof(TransactionId))]
+[Index(nameof(Date), nameof(TransactionId))]
 public class Transactions : BaseDataModel
 {
     public long TransactionId { get; set; }

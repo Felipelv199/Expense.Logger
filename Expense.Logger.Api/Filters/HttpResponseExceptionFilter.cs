@@ -33,9 +33,9 @@ public class HttpResponseExceptionFilter : IActionFilter, IOrderedFilter
         {
             Status = (int)httpStatus,
             Code = httpStatus.ToString(),
-            Message = GetErrorMessage(exception),
+            Message = httpStatus == HttpStatusCode.InternalServerError ? "The server was unable to complete your request. Please try again later." : exception.Message,
             RequestId = Guid.NewGuid().ToString(),
-            Errors = httpStatus == HttpStatusCode.BadRequest ? GetErrorDetails(exception) : []
+            Errors = httpStatus == HttpStatusCode.BadRequest && exception is InvalidDataException invalidDataException ? [invalidDataException.Details.ToErrorDetails()] : []
         };
     }
 
@@ -43,18 +43,8 @@ public class HttpResponseExceptionFilter : IActionFilter, IOrderedFilter
     {
         TransactionCategoryNotFound or TransactionCategoryNotFound or InvalidTransactionCreateException or InvalidTransactionQueryException => HttpStatusCode.BadRequest,
 
+        TransactionNotFound => HttpStatusCode.NotFound,
+
         _ => HttpStatusCode.InternalServerError,
     };
-
-    private static string GetErrorMessage(Exception exception) => exception switch
-    {
-        TransactionCategoryNotFound transactionCategoryNotFound => transactionCategoryNotFound.Message,
-
-        InvalidDataException invalidDataException => invalidDataException.Message,
-
-        _ => "The server was unable to complete your request. Please try again later."
-    };
-
-    private static IEnumerable<ErrorDetails> GetErrorDetails(Exception exception) => exception is
-        InvalidDataException invalidDataException ? [invalidDataException.Details.ToErrorDetails()] : [];
 }

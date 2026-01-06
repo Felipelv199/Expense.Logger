@@ -1,15 +1,4 @@
 ﻿namespace Expense.Logger.Business.Models.Exceptions;
 
-public class InvalidTransactionQueryException : BusinessException
-{
-    public InvalidTransactionQueryException(string fieldName, string description) : base("Invalid transaction create")
-    {
-        Details = new ExceptionFieldDetails()
-        {
-            FieldName = fieldName,
-            Description = description
-        };
-    }
-
-    public ExceptionFieldDetails Details { get; set; }
-}
+public class InvalidTransactionQueryException(string fieldName, string description)
+    : InvalidDataException("Invalid transaction query", fieldName, description) { }

@@ -21,7 +21,7 @@ builder.Services.AddSingleton<ITransactionsHandler, TransactionHandler>();
 builder.Services.AddSingleton<ICatgoriesRepository, CatgoriesRepository>();
 builder.Services.AddSingleton<ITransactionsRepository, TransactionsRepository>();
 
-var connectionString = builder.Configuration.GetConnectionString("ExpenseLoggerDatabase")
+string connectionString = builder.Configuration.GetConnectionString("ExpenseLoggerDatabase")
         ?? throw new InvalidOperationException("Connection string"
         + "'ExpenseLoggerDatabase' not found.");
 builder.Services.AddPooledDbContextFactory<ExpenseLoggerDbContext>(options =>

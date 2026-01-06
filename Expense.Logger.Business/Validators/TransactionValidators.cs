@@ -5,31 +5,21 @@ namespace Expense.Logger.Business.Validators;
 
 public static class TransactionValidators
 {
-    public static void ValidateTransactionCreate(TransactionCreate transaction)
+    public static void ValidateTransactionCreate(TransactionCreate create)
     {
-        if (transaction.Date > DateTime.Now)
+        if (create.Date > DateTime.Now)
         {
-            throw new InvalidTransactionCreateException(nameof(transaction.Date), "Transaction date cannot be in the future");
+            throw new InvalidTransactionCreateException(nameof(create.Date), "Transaction date cannot be in the future");
         }
     }
 
     public static void ValidateTransactionQuery(TransactionQuery query)
-    {
-        if (query.PageNumber is not null)
+    {   
+        if (query.PageSize < 1)
         {
-            if (query.PageNumber < 1)
-            {
-                throw new InvalidTransactionQueryException(nameof(query.PageNumber), "Page number needs to be 1 or greater");
-            }
+            throw new InvalidTransactionQueryException(nameof(query.PageSize), "Page size needs to be 1 or greater");
         }
-
-        if (query.PageSize is not null)
-        {
-            if (query.PageSize < 1)
-            {
-                throw new InvalidTransactionQueryException(nameof(query.PageSize), "Page size needs to be 1 or greater");
-            }
-        }
+        
 
         if (query.From is not null && query.To is not null)
         {

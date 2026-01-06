@@ -1,6 +1,8 @@
-﻿using Expense.Logger.Business.Interfaces;
+﻿using Expense.Logger.Business.Helpers;
+using Expense.Logger.Business.Interfaces;
 using Expense.Logger.Business.Mappers;
 using Expense.Logger.Business.Models;
+using Expense.Logger.Business.Models.Exceptions;
 using Expense.Logger.Business.Models.Transaction;
 using Expense.Logger.Business.Validators;
 using Expense.Logger.Data.Interfaces;
@@ -9,16 +11,16 @@ namespace Expense.Logger.Business.Implementations;
 
 public partial class TransactionHandler(ICatgoriesRepository catgoriesRepository, ITransactionsRepository transactionsRepository) : ITransactionsHandler
 {
-    public ICatgoriesRepository _catgoriesRepository = catgoriesRepository;
+    private readonly ICatgoriesRepository _catgoriesRepository = catgoriesRepository;
 
-    public ITransactionsRepository _transactionsRepository = transactionsRepository;
+    private readonly ITransactionsRepository _transactionsRepository = transactionsRepository;
 
-    public async Task<Transaction> CreateAsync(TransactionCreate transactionCreate)
+    public async Task<Transaction> CreateAsync(TransactionCreate create)
     {
-        TransactionValidators.ValidateTransactionCreate(transactionCreate);
+        TransactionValidators.ValidateTransactionCreate(create);
 
-        await EnsureTransactionCategoryExists(transactionCreate.CategoryId);
-        var transactionData = await _transactionsRepository.AddAndSave(transactionCreate.ToDataModel());
+        await EnsureTransactionCategoryExists(create.CategoryId);
+        var transactionData = await _transactionsRepository.AddAndSave(create.ToDataModel());
 
         return transactionData.ToBusinessModel();
     }
@@ -28,16 +30,20 @@ public partial class TransactionHandler(ICatgoriesRepository catgoriesRepository
         throw new NotImplementedException();
     }
 
-    public Task<Transaction> GetByIdAsync(long id)
+    public async Task<Transaction> GetByIdAsync(long id)
     {
-        throw new NotImplementedException();
+        var transactionData = await _transactionsRepository.Find(id) ?? throw new TransactionNotFound(id);
+
+        return transactionData.ToBusinessModel();
     }
 
-    public Task<ResponseItemsPaged<Transaction>> GetByPageAsync(TransactionQuery transactionQuery)
+    public async Task<PagedResponse<Transaction>> GetByPageAsync(TransactionQuery query)
     {
-        TransactionValidators.ValidateTransactionQuery(transactionQuery);
+        TransactionValidators.ValidateTransactionQuery(query);
 
-        throw new NotImplementedException();
+        var transactions = await _transactionsRepository.FindPageItems(query.ToTransactionPageInfo());
+
+        return TransactionHelpers.BuildPagedTransactions(transactions, query);
     }
 
     public Task UpdateAsync(long id, TransactionUpdate transaction)

@@ -2,9 +2,9 @@
 
 public class PageInfoQuery
 {
-    public int? PageNumber { get; set; }
-
-    public int? PageSize { get; set; }
+    public int PageSize { get; set; } = 10;
 
     public string Search { get; set; }
+
+    public long LastId { get; set; }
 }

@@ -5,11 +5,11 @@ namespace Expense.Logger.Business.Interfaces;
 
 public interface ITransactionsHandler
 {
-    public Task<ResponseItemsPaged<Transaction>> GetByPageAsync(TransactionQuery query);
+    public Task<PagedResponse<Transaction>> GetByPageAsync(TransactionQuery query);
 
     public Task<Transaction> GetByIdAsync(long id);
 
-    public Task<Transaction> CreateAsync(TransactionCreate transaction);
+    public Task<Transaction> CreateAsync(TransactionCreate create);
 
     public Task UpdateAsync(long id, TransactionUpdate transaction);
 
