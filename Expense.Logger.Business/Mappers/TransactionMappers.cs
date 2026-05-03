@@ -24,6 +24,18 @@ public static class TransactionMappers
             Amount = transactionData.Amount,
             Date = transactionData.Date,
             Category = transactionData.Category.ToBusinessModel(),
-            Type = (TransactionType)transactionData.Type
+            Type = (TransactionType)transactionData.Type,
+            Description = transactionData.Description
+        };
+
+    public static TransactionsFilter ToFilter(this TransactionQuery transactionQuery) =>
+        new ()
+        {
+            Search = transactionQuery.Search,
+            Type = transactionQuery.Type.HasValue ? (int?)transactionQuery.Type.Value : null,
+            EndDate = transactionQuery.EndDate,
+            MaxAmount = transactionQuery.MaxAmount,
+            MinAmount = transactionQuery.MinAmount,
+            StartDate = transactionQuery.StartDate
         };
 }

@@ -9,49 +9,52 @@ public static class TransactionValidators
     {
         if (transaction.Date > DateTime.Now)
         {
-            throw new InvalidTransactionCreateException(nameof(transaction.Date), "Transaction date cannot be in the future");
+            throw new InvalidTransactionCreateException(nameof(transaction.Date), $"{nameof(transaction.Date)} cannot be in the future");
         }
     }
 
     public static void ValidateTransactionQuery(TransactionQuery query)
     {
-        if (query.PageNumber is not null)
+
+        if (query.PageNumber < 1)
         {
-            if (query.PageNumber < 1)
+            throw new InvalidTransactionQueryException(nameof(query.PageNumber), $"{nameof(query.PageNumber)} needs to be 1 or greater");
+        }
+
+        if (query.PageSize < 1)
+        {
+            throw new InvalidTransactionQueryException(nameof(query.PageSize), $"{nameof(query.PageSize)} needs to be 1 or greater");
+        }
+
+        if (query.EndDate is not null && query.EndDate is not null)
+        {
+            if (query.StartDate > query.EndDate)
             {
-                throw new InvalidTransactionQueryException(nameof(query.PageNumber), "Page number needs to be 1 or greater");
+                throw new InvalidTransactionQueryException(nameof(query.StartDate), $"{nameof(query.EndDate)} needs to be greater than {nameof(query.StartDate)}");
             }
         }
 
-        if (query.PageSize is not null)
+        if (query.StartDate is not null)
         {
-            if (query.PageSize < 1)
+            if (query.StartDate > DateTime.Now)
             {
-                throw new InvalidTransactionQueryException(nameof(query.PageSize), "Page size needs to be 1 or greater");
+                throw new InvalidTransactionQueryException(nameof(query.StartDate), $"{nameof(query.StartDate)} needs to be less or equal to our current date and time");
             }
         }
 
-        if (query.From is not null && query.To is not null)
+        if (query.EndDate is not null)
         {
-            if (query.From > query.To)
+            if (query.EndDate > DateTime.Now)
             {
-                throw new InvalidTransactionQueryException(nameof(query.To), "To needs to be greater than From");
+                throw new InvalidTransactionQueryException(nameof(query.EndDate), $"{query.EndDate} needs to be less or equal to our current date and time");
             }
         }
 
-        if (query.From is not null)
+        if (query.MinAmount is not null && query.MaxAmount is not null)
         {
-            if (query.From > DateTime.Now)
+            if (query.MinAmount > query.MaxAmount)
             {
-                throw new InvalidTransactionQueryException(nameof(query.From), "From needs to be less or equal to our current date and time");
-            }
-        }
-
-        if (query.To is not null)
-        {
-            if (query.To > DateTime.Now)
-            {
-                throw new InvalidTransactionQueryException(nameof(query.To), "To needs to be less or equal to our current date and time");
+                throw new InvalidTransactionQueryException(nameof(query.MinAmount), $"{nameof(query.MinAmount)} needs to be less than or equal to {nameof(query.MaxAmount)}");
             }
         }
     }

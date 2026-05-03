@@ -1,4 +1,5 @@
-﻿using Expense.Logger.Business.Interfaces;
+﻿using Expense.Logger.Business.Helpers;
+using Expense.Logger.Business.Interfaces;
 using Expense.Logger.Business.Mappers;
 using Expense.Logger.Business.Models;
 using Expense.Logger.Business.Models.Transaction;
@@ -33,11 +34,12 @@ public partial class TransactionHandler(ICatgoriesRepository catgoriesRepository
         throw new NotImplementedException();
     }
 
-    public Task<ResponseItemsPaged<Transaction>> GetByPageAsync(TransactionQuery transactionQuery)
+    public async Task<ResponseItemsPaged<Transaction>> GetByPageAsync(TransactionQuery transactionQuery)
     {
         TransactionValidators.ValidateTransactionQuery(transactionQuery);
+        var transactions = await _transactionsRepository.FindByFilter(transactionQuery.ToFilter(), transactionQuery.ToPagination());
 
-        throw new NotImplementedException();
+        return PaginationHelper<Transaction>.BuildResponseItemsPaged(transactions.Select(t => t.ToBusinessModel()), transactionQuery);
     }
 
     public Task UpdateAsync(long id, TransactionUpdate transaction)
