@@ -22,7 +22,7 @@ public class Transactions : BaseDataModel
     [Comment("0: Expense, 1: Income, 2: Transfer")]
     public int Type { get; set; } // 0: Expense, 1: Income, 2: Transfer
 
-    public Categories Category { get; set; }
+    public Categories Category { get; set; } // TODO: Category can be null, but it is not working with EF Core, need to investigate
 
     public BankAccounts BankAccounts { get; set; }
 }
