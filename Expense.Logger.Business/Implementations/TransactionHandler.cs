@@ -1,6 +1,8 @@
-﻿using Expense.Logger.Business.Interfaces;
+﻿using Expense.Logger.Business.Helpers;
+using Expense.Logger.Business.Interfaces;
 using Expense.Logger.Business.Mappers;
 using Expense.Logger.Business.Models;
+using Expense.Logger.Business.Models.Exceptions;
 using Expense.Logger.Business.Models.Transaction;
 using Expense.Logger.Business.Validators;
 using Expense.Logger.Data.Interfaces;
@@ -28,16 +30,21 @@ public partial class TransactionHandler(ICatgoriesRepository catgoriesRepository
         throw new NotImplementedException();
     }
 
-    public Task<Transaction> GetByIdAsync(long id)
+    public async Task<Transaction> GetByIdAsync(long id)
     {
-        throw new NotImplementedException();
+        var transaction = await _transactionsRepository.FindById(id);
+
+        return transaction is null ? throw new TransactionNotFound(id) : transaction.ToBusinessModel();
     }
 
-    public Task<ResponseItemsPaged<Transaction>> GetByPageAsync(TransactionQuery transactionQuery)
+    public async Task<ResponseItemsPaged<Transaction>> GetByPageAsync(TransactionQuery transactionQuery)
     {
         TransactionValidators.ValidateTransactionQuery(transactionQuery);
+        var filter = transactionQuery.ToFilter();
+        var transactions = await _transactionsRepository.FindByFilter(filter, transactionQuery.ToPagination());
+        var totalCount = await _transactionsRepository.CountByFilter(filter);
 
-        throw new NotImplementedException();
+        return PaginationHelper<Transaction>.BuildResponseItemsPaged(transactions.Select(t => t.ToBusinessModel()), transactionQuery, totalCount);
     }
 
     public Task UpdateAsync(long id, TransactionUpdate transaction)

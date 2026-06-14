@@ -1,4 +1,6 @@
-﻿namespace Expense.Logger.Business.Models.Transaction;
+﻿using Expense.Logger.Business.Models;
+
+namespace Expense.Logger.Business.Models.Transaction;
 
 public class Transaction
 {
@@ -6,11 +8,15 @@ public class Transaction
 
     public string Name { get; set; }
 
+    public string Description { get; set; }
+
     public decimal Amount { get; set; }
 
     public DateTime Date { get; set; }
 
     public Category Category { get; set; }
+
+    public BankAccount BankAccount { get; set; }
 
     public TransactionType Type { get; set; }
 }

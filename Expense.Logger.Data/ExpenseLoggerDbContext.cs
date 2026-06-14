@@ -20,7 +20,7 @@ public class ExpenseLoggerDbContext(DbContextOptions<ExpenseLoggerDbContext> opt
             .IsRequired(false);
 
         modelBuilder.Entity<BankAccounts>().HasMany(bankAccount => bankAccount.Transactions)
-            .WithOne(transaction => transaction.BankAccounts)
+            .WithOne(transaction => transaction.BankAccount)
             .HasForeignKey(transaction => transaction.BankAccountId)
             .OnDelete(DeleteBehavior.SetNull)
             .IsRequired(false);

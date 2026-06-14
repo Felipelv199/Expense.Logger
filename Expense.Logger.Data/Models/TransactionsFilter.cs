@@ -1,6 +1,6 @@
-﻿namespace Expense.Logger.Business.Models.Transaction;
+﻿namespace Expense.Logger.Data.Models;
 
-public class TransactionQuery : PageInfoQuery
+public class TransactionsFilter
 {
     public DateTime? StartDate { get; set; }
 
@@ -10,5 +10,7 @@ public class TransactionQuery : PageInfoQuery
 
     public decimal? MaxAmount { get; set; }
 
-    public TransactionType? Type { get; set; }
+    public int? Type { get; set; }
+
+    public string Search { get; set; }
 }

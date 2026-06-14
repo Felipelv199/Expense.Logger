@@ -41,13 +41,17 @@ public class HttpResponseExceptionFilter : IActionFilter, IOrderedFilter
 
     private static HttpStatusCode GetHttpStatus(Exception exception) => exception switch
     {
-        TransactionCategoryNotFound or TransactionCategoryNotFound or InvalidTransactionCreateException or InvalidTransactionQueryException => HttpStatusCode.BadRequest,
+        TransactionNotFound => HttpStatusCode.NotFound,
+
+        TransactionCategoryNotFound or InvalidTransactionCreateException or InvalidTransactionQueryException => HttpStatusCode.BadRequest,
 
         _ => HttpStatusCode.InternalServerError,
     };
 
     private static string GetErrorMessage(Exception exception) => exception switch
     {
+        TransactionNotFound transactionNotFound => transactionNotFound.Message,
+
         TransactionCategoryNotFound transactionCategoryNotFound => transactionCategoryNotFound.Message,
 
         InvalidDataException invalidDataException => invalidDataException.Message,
