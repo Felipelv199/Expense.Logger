@@ -22,42 +22,55 @@ public class TransactionsRepository(IDbContextFactory<ExpenseLoggerDbContext> co
         return entity.Entity;
     }
 
+    public async Task<Transactions?> FindById(long id)
+    {
+        using var context = await _contextFactory.CreateDbContextAsync();
+        return await context.Transactions
+            .Include(t => t.Category)
+            .Include(t => t.BankAccount)
+            .FirstOrDefaultAsync(t => t.TransactionId == id);
+    }
+
     public async Task<IEnumerable<Transactions>> FindByFilter(TransactionsFilter filter, Pagination pagination)
     {
         using var context = await _contextFactory.CreateDbContextAsync();
-        var query = context.Transactions.AsQueryable();
 
+        return await ApplyFilter(context.Transactions.AsQueryable(), filter)
+            .Include(t => t.Category)
+            .Include(t => t.BankAccount)
+            .OrderBy(t => t.CreatedAt).ThenBy(t => t.TransactionId)
+            .Skip(pagination.Offset).Take(pagination.Limit).ToListAsync();
+    }
+
+    public async Task<long> CountByFilter(TransactionsFilter filter)
+    {
+        using var context = await _contextFactory.CreateDbContextAsync();
+        return await ApplyFilter(context.Transactions.AsQueryable(), filter).LongCountAsync();
+    }
+
+    private static IQueryable<Transactions> ApplyFilter(IQueryable<Transactions> query, TransactionsFilter filter)
+    {
         if (filter.StartDate is not null)
-        {
             query = query.Where(t => t.Date >= filter.StartDate);
-        }
 
         if (filter.EndDate is not null)
-        {
             query = query.Where(t => t.Date <= filter.EndDate);
-        }
 
-        if (filter.MaxAmount is not null) 
-        {
+        if (filter.MaxAmount is not null)
             query = query.Where(t => t.Amount <= filter.MaxAmount);
-        }
 
         if (filter.MinAmount is not null)
-        {
             query = query.Where(t => t.Amount >= filter.MinAmount);
-        }
 
         if (filter.Type is not null)
-        {
             query = query.Where(t => t.Type == filter.Type);
-        }
 
         if (filter.Search is not null)
-        {
-            query = query.Where(t => t.Name.Contains(filter.Search) || t.Description.Contains(filter.Search));
-        }
+            query = query.Where(t => 
+                (t.Name != null && t.Name.Contains(filter.Search)) ||
+                (t.Description != null && t.Description.Contains(filter.Search))
+            );
 
-        return await query.OrderBy(t => t.CreatedAt).ThenBy(t => t.TransactionId).Skip(pagination.Offset)
-            .Take(pagination.Limit).ToListAsync();
+        return query;
     }
 }

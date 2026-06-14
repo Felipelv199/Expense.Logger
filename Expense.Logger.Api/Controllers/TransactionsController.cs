@@ -16,14 +16,10 @@ public class TransactionsController(ITransactionsHandler transactionsHandler) : 
         Ok(await _transactionsHandler.CreateAsync(create));
 
     [HttpGet("{id}")]
-    public ActionResult GetById(long id)
-    {
-        return Ok(_transactionsHandler.GetByIdAsync(id));
-    }
+    public async Task<ActionResult> GetById(long id) =>
+        Ok(await _transactionsHandler.GetByIdAsync(id));
 
     [HttpGet]
-    public ActionResult Get([FromQuery] TransactionQuery query)
-    {
-        return Ok(_transactionsHandler.GetByPageAsync(query));
-    }
+    public async Task<ActionResult> Get([FromQuery] TransactionQuery query) =>
+        Ok(await _transactionsHandler.GetByPageAsync(query));
 }

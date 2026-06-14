@@ -23,7 +23,8 @@ public static class TransactionMappers
             Name = transactionData.Name,
             Amount = transactionData.Amount,
             Date = transactionData.Date,
-            Category = transactionData.Category.ToBusinessModel(),
+            Category = transactionData.Category?.ToBusinessModel(),
+            BankAccount = transactionData.BankAccount?.ToBusinessModel(),
             Type = (TransactionType)transactionData.Type,
             Description = transactionData.Description
         };
