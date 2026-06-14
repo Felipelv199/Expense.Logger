@@ -14,9 +14,9 @@ public class Transaction
 
     public DateTime Date { get; set; }
 
-    public Category? Category { get; set; }
+    public Category Category { get; set; }
 
-    public BankAccount? BankAccount { get; set; }
+    public BankAccount BankAccount { get; set; }
 
     public TransactionType Type { get; set; }
 }
