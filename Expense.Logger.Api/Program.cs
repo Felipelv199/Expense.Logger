@@ -21,9 +21,14 @@ builder.Services.AddSingleton<ITransactionsHandler, TransactionHandler>();
 builder.Services.AddSingleton<ICatgoriesRepository, CatgoriesRepository>();
 builder.Services.AddSingleton<ITransactionsRepository, TransactionsRepository>();
 
-var connectionString = builder.Configuration.GetConnectionString("ExpenseLoggerDatabase")
-        ?? throw new InvalidOperationException("Connection string"
-        + "'ExpenseLoggerDatabase' not found.");
+// Supplied via user secrets in development or the ConnectionStrings__ExpenseLoggerDatabase
+// environment variable elsewhere; appsettings.json only holds an empty placeholder.
+var connectionString = builder.Configuration.GetConnectionString("ExpenseLoggerDatabase");
+if (string.IsNullOrWhiteSpace(connectionString))
+{
+    throw new InvalidOperationException("Connection string 'ExpenseLoggerDatabase' is not configured. "
+        + "Set it with 'dotnet user-secrets' or the ConnectionStrings__ExpenseLoggerDatabase environment variable.");
+}
 builder.Services.AddPooledDbContextFactory<ExpenseLoggerDbContext>(options =>
     options.UseMySQL(connectionString));
 
